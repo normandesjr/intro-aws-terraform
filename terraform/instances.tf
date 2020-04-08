@@ -12,7 +12,8 @@ resource "aws_instance" "instances" {
 
   key_name = aws_key_pair.keypair.key_name
 
-  vpc_security_group_ids = [aws_security_group.allow_ssh.id]
+  vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.database.id
+                           , aws_security_group.allow_outbound.id]
     
   tags = {
     Name = "zup_instances"
