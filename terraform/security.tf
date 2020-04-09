@@ -33,3 +33,34 @@ resource "aws_security_group" "allow_outbound" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "load_balancer_ingress" {
+  vpc_id = aws_vpc.main.id
+  name = "zup_load_balancer_ingress"
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    security_groups = [aws_security_group.load_balancer_tg.id]
+  }
+}
+
+resource "aws_security_group" "load_balancer_tg" {
+  vpc_id = aws_vpc.main.id
+  name = "zup_load_balancer_tg"
+
+  ingress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    self = true
+  }
+}
