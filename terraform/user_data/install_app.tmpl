@@ -1,0 +1,6 @@
+#!/bin/bash
+yum update -y
+yum install telnet -y
+yum install docker -y
+service docker start
+docker run -d -e spring_datasource_url=jdbc:postgresql://${database_endpoint}/zup -e spring_datasource_password=123zup123 -e spring_datasource_username=zup -p 8080:8080 --name prepaid normandesjr/prepaid

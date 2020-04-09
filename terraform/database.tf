@@ -27,3 +27,7 @@ module "rds" {
   
   subnet_ids = flatten(chunklist(aws_subnet.private_subnet.*.id, 1))
 }
+
+output "database_endpoint" {
+    value = module.rds.this_db_instance_endpoint
+}
