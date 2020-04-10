@@ -1,5 +1,7 @@
 'use strict'
 
+let qs = require('querystring')
+
 const { Client } = require('pg');
 const client = new Client();
 client
@@ -8,7 +10,8 @@ client
   .catch((err) => console.error('connection error', err.stack))
 
 module.exports.handler = async event => {
-  const accountNumber = event.pathParameters.proxy
+  const body = qs.parse(event.body)
+  const accountNumber = body.text
   
   const fetchBalanceQuery = {
     name: 'fetch-balance-query',
@@ -16,22 +19,33 @@ module.exports.handler = async event => {
     values: [accountNumber]
   }
   
-  const result = {};
+  const result = {
+    'statusCode': 200,
+    'headers': {'Content-Type': 'application/json'}
+  }
+  const slackBody = {
+    'blocks': [{
+      'type': 'section',
+      'text': {
+        'type': 'mrkdwn',
+        'text': ''
+      }
+    }]
+  }
   try {
     const query = await client.query(fetchBalanceQuery);
     const balanceAccount = query.rows[0];
-
+    
     if (balanceAccount && balanceAccount.total) {
-      result.statusCode = 200;
-      result.headers = {'Content-Type': 'application/json'}
-      result.body = JSON.stringify(balanceAccount)
+      slackBody.blocks[0].text.text = ':moneybag: Total balance R$'+ balanceAccount.total + ' for account number ' + accountNumber
     } else {
-      result.statusCode = 404
+      slackBody.blocks[0].text.text = ':see_no_evil: Ops, account not found'
     }
   } catch (error) {
     console.error(error.stack)
-    result.statusCode = 500
+    slackBody.blocks[0].text.text = ':scream: Sorry, something terrible happened'
   }
 
+  result.body = JSON.stringify(slackBody)
   return result;
 };
