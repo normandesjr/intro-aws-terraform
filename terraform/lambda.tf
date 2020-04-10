@@ -31,11 +31,15 @@ resource "aws_iam_role_policy_attachment" "aws_lambda_vpc_access" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+variable "app_version" {
+}
+
+
 resource "aws_lambda_function" "slack_lambda_function" {
     function_name   = "SlackLambdaFunction"
 
     s3_bucket       = aws_s3_bucket.bucket_slack_lambda.id
-    s3_key          = "v1.2.0/zup-lambda.zip"
+    s3_key          = "v${var.app_version}/zup-lambda.zip"
 
     handler         = "main.handler"
     runtime         = "nodejs12.x"
@@ -43,7 +47,7 @@ resource "aws_lambda_function" "slack_lambda_function" {
     role            = aws_iam_role.lambda_exec_role.arn
     
     vpc_config {
-        subnet_ids          = flatten(chunklist(aws_subnet.public_subnet.*.id, 1))
+        subnet_ids          = flatten(chunklist(aws_subnet.private_subnet.*.id, 1))
         security_group_ids  = [aws_security_group.database.id, aws_security_group.allow_outbound.id]
     }
 

@@ -10,33 +10,28 @@ client
 module.exports.handler = async event => {
   const accountNumber = event.pathParameters.proxy
   
-  const query = {
-    name: 'fetch-account-sumary',
+  const fetchBalanceQuery = {
+    name: 'fetch-balance-query',
     text: 'SELECT sum(amount) as total FROM account_activity WHERE account_number = $1',
     values: [accountNumber]
   }
   
+  const result = {};
   try {
-    const result = await client.query(query);
-    const balanceAccount = result.rows[0];
+    const query = await client.query(fetchBalanceQuery);
+    const balanceAccount = query.rows[0];
+
     if (balanceAccount && balanceAccount.total) {
-      return {
-        statusCode: 200,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(balanceAccount)
-      }
+      result.statusCode = 200;
+      result.headers = {'Content-Type': 'application/json'}
+      result.body = JSON.stringify(balanceAccount)
     } else {
-      return {
-        statusCode: 404
-      }  
+      result.statusCode = 404
     }
   } catch (error) {
     console.error(error.stack)
-    return {
-      statusCode: 500
-    }
+    result.statusCode = 500
   }
 
+  return result;
 };
