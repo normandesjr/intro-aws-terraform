@@ -1,3 +1,6 @@
 *.tfstate*
 .terraform/
 zup_key
+zup-lambda.zip
+node_modules/
+package-lock.json

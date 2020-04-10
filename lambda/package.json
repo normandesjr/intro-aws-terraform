@@ -1,0 +1,15 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "zip": "zip -r ../zup-lambda.zip *",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "normandesjr",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.0.2"
+  }
+}
