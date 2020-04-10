@@ -38,8 +38,8 @@ module "alb" {
 
 resource "aws_lb_target_group_attachment" "alb_group_attachment" {
   count = "3"
-  target_group_arn = "${module.alb.target_group_arns[0]}"
-  target_id = "${element(aws_instance.instances.*.id, count.index)}"
+  target_group_arn = module.alb.target_group_arns[0]
+  target_id = element(aws_instance.instances.*.id, count.index)
   port = 8080
 }
 
