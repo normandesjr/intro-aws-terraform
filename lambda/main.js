@@ -8,29 +8,35 @@ client
   .catch((err) => console.error('connection error', err.stack))
 
 module.exports.handler = async event => {
-  console.log('####### yeahhh!!')
+  const accountNumber = event.pathParameters.proxy
   
-  const accountNumber = '1111';
   const query = {
     name: 'fetch-account-sumary',
     text: 'SELECT sum(amount) as total FROM account_activity WHERE account_number = $1',
     values: [accountNumber]
   }
   
-  await client
-    .query(query)
-    .then(result => console.log(result.rows))
-    .catch(e => console.error(e.stack))
+  try {
+    const result = await client.query(query);
+    const balanceAccount = result.rows[0];
+    if (balanceAccount && balanceAccount.total) {
+      return {
+        statusCode: 200,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(balanceAccount)
+      }
+    } else {
+      return {
+        statusCode: 404
+      }  
+    }
+  } catch (error) {
+    console.error(error.stack)
+    return {
+      statusCode: 500
+    }
+  }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
 };
