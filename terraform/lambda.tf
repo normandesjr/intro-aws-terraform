@@ -1,9 +1,5 @@
-resource "aws_s3_bucket" "bucket_slack_lambda" {
+data "aws_s3_bucket" "bucket_slack_lambda" {
   bucket = "zup-slack-lambda-bucket"
-
-  tags = {
-    Name = "Zup Lambda Slack Bucket"
-  }
 }
 
 resource "aws_iam_role" "lambda_exec_role" {
@@ -38,7 +34,7 @@ variable "app_version" {
 resource "aws_lambda_function" "slack_lambda_function" {
     function_name   = "SlackLambdaFunction"
 
-    s3_bucket       = aws_s3_bucket.bucket_slack_lambda.id
+    s3_bucket       = data.aws_s3_bucket.bucket_slack_lambda.id
     s3_key          = "v${var.app_version}/zup-lambda.zip"
 
     handler         = "main.handler"
