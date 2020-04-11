@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "0829995e-b412-4ba5-80a1-011d17d1ed8b",
+		"name": "Intro AWS com Terraform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "text",
+							"value": "2222",
+							"type": "text"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api_gateway}}/xxx",
+					"host": [
+						"{{api_gateway}}"
+					],
+					"path": [
+						"xxx"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RECHARGE Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"amount\": 1.0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{load_balancer}}/accounts/1111/recharges",
+					"host": [
+						"{{load_balancer}}"
+					],
+					"path": [
+						"accounts",
+						"1111",
+						"recharges"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
