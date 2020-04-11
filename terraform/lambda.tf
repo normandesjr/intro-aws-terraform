@@ -41,6 +41,8 @@ resource "aws_lambda_function" "slack_lambda_function" {
     runtime         = "nodejs12.x"
 
     role            = aws_iam_role.lambda_exec_role.arn
+
+    reserved_concurrent_executions = 50
     
     vpc_config {
         subnet_ids          = flatten(chunklist(aws_subnet.private_subnet.*.id, 1))

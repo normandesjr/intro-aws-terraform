@@ -16,7 +16,7 @@ module "rds" {
   port = "5432"
 
   vpc_security_group_ids = [aws_security_group.database.id]
-  parameter_group_name = "default:postgres-9-6"
+  create_db_parameter_group = false
 
   major_engine_version = "9.6"
   family = "postgres9.6"
